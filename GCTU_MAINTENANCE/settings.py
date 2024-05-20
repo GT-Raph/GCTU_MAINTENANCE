@@ -150,3 +150,5 @@ STATIC_ROOT = (BASE_DIR/"asert/")
 #LOGIN_URL = 'user-login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+#AUTH_USER_MODEL = 'MAINTENANCE.CustomUser'
