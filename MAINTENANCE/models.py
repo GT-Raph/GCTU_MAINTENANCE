@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import AbstractUser, Group, Permission
 
 CATEGORY = (
     ('Carpentry', 'Carpentry'),
@@ -23,3 +24,10 @@ class MaintenanceRequest(models.Model):
 
     def __str__(self):
         return f"Maintenance Request #{self.pk}"
+    
+class CustomUser(AbstractUser):
+    phone_number = models.CharField(max_length=15, blank=True, null=True)
+    
+    # Override the groups and user_permissions fields
+    groups = models.ManyToManyField(Group, blank=True, related_name='customuser_set')
+    user_permissions = models.ManyToManyField(Permission, blank=True, related_name='customuser_set')

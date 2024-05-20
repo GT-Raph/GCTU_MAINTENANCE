@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from .forms import MaintenanceRequestForm
 
 # Create your views here.
 def index(request):
@@ -22,3 +23,13 @@ def insoluble(request):
 
 def workers(request):
     return render(request, 'MAINTENANCE/workers.html')
+
+def request(request):
+    if request.method == 'POST':
+        form = MaintenanceRequestForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('MAINTENANCE/request_success')  # replace 'success_url' with the URL you want to redirect to after a successful form submission
+    else:
+        form = MaintenanceRequestForm()
+    return render(request, 'MAINTENANCE/request.html', {'form': form})
