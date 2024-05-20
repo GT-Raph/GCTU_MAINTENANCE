@@ -9,4 +9,5 @@ urlpatterns = [
     path('pending/', views.pending, name='pending'),
     path('insoluble/', views.insoluble, name='insoluble'),
     path('workers/', views.workers, name='workers'),
+    path('request/', views.request, name='request'),
 ]
