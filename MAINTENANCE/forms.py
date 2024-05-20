@@ -1,15 +1,12 @@
 from django import forms
-from .models import Product, Order
+from .models import MaintenanceRequest, CustomUser
 
+class MaintenanceRequestForm(forms.ModelForm):
+    check_repaired_by = forms.ModelMultipleChoiceField(
+        queryset=CustomUser.objects.all(),
+        widget=forms.SelectMultiple,
+    )
 
-class ProductForm(forms.ModelForm):
     class Meta:
-        model = Product
+        model = MaintenanceRequest
         fields = '__all__'
-
-
-class OrderForm(forms.ModelForm):
-
-    class Meta:
-        model = Order
-        fields = ['name', 'order_quantity']
