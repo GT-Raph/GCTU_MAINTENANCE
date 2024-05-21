@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import MaintenanceRequestForm
 
@@ -29,7 +29,10 @@ def request(request):
         form = MaintenanceRequestForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('MAINTENANCE/request_success')  # replace 'success_url' with the URL you want to redirect to after a successful form submission
+            return redirect('request_success')  # replace 'success_url' with the URL you want to redirect to after a successful form submission
     else:
         form = MaintenanceRequestForm()
     return render(request, 'MAINTENANCE/request.html', {'form': form})
+
+def request_success(request):
+    return render(request, 'MAINTENANCE/request_success.html')
