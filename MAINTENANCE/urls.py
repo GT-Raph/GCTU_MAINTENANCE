@@ -10,4 +10,5 @@ urlpatterns = [
     path('insoluble/', views.insoluble, name='insoluble'),
     path('workers/', views.workers, name='workers'),
     path('request/', views.request, name='request'),
+    path('request/request_success/', views.request_success, name='request_success'),
 ]
