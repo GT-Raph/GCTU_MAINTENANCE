@@ -34,7 +34,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for task in requests %}
+            {% for task in maintenance %}
                 <tr>
                     <td>{{ task.date_of_request }}</td>
                     <td>{{ task.department_location }}</td>
@@ -44,7 +44,17 @@
                     <td>{{ task.description_of_request }}</td>
                     <td>{{ task.date_of_completion }}</td>
                     <td>{{ task.approval_by_property }}</td>
-                    <td>{{ task.process }}</td>
+                    <td>
+                        <form method="post" action="{% url 'update_process' task.id %}">
+                            {% csrf_token %}
+                            <select name="process" onchange="this.form.submit()">
+                                <option value="pending" {% if task.process == 'pending' %}selected{% endif %}>Pending</option>
+                                <option value="solved" {% if task.process == 'solved' %}selected{% endif %}>Solved</option>
+                                <option value="unsolved" {% if task.process == 'unsolved' %}selected{% endif %}>Unsolved</option>
+                                <option value="insoluble" {% if task.process == 'insoluble' %}selected{% endif %}>Insoluble</option>
+                            </select>
+                        </form>
+                    </td>
                 </tr>
             {% endfor %}
         </tbody>

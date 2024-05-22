@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from .forms import MaintenanceRequestForm
+from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from .models import MaintenanceRequest 
@@ -36,7 +37,11 @@ def solved(request):
 
 @login_required
 def unsolved(request):
-    return render(request, 'MAINTENANCE/unsolved.html')
+    # Get all unsolved maintenance tasks assigned to the current user
+    unsolved_maintenance = MaintenanceRequest.objects.filter(process='unsolved', check_repaired_by=request.user)
+
+    # Pass the tasks to the template
+    return render(request, 'MAINTENANCE/unsolved.html', {'maintenance': unsolved_maintenance})
 
 @csrf_exempt
 def update_process(request, task_id):
@@ -55,8 +60,20 @@ def insoluble(request):
     insoluble_requests = MaintenanceRequest.objects.filter(check_repaired_by=request.user, process='insoluble')
     return render(request, "MAINTENANCE/insoluble.html", {'requests': insoluble_requests})
 
+@login_required
 def workers(request):
-    return render(request, 'MAINTENANCE/workers.html')
+    # Exclude the current user from the list of workers
+    workers = User.objects.exclude(id=request.user.id)
+    workers_with_requests = [
+        {
+            'worker': worker,
+            'requests': MaintenanceRequest.objects.filter(check_repaired_by=worker)
+        }
+        for worker in workers
+    ]
+    return render(request, 'MAINTENANCE/workers.html', {'workers_with_requests': workers_with_requests})
+
+
 
 def request(request):
     if request.method == 'POST':
