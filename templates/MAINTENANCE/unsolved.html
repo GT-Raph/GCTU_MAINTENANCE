@@ -1,2 +1,52 @@
 {% extends "partials/base.html" %}
 {% block title %} Unsolved {% endblock %}
+
+{% block content %}
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #17a2b8;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+    <table>
+        <thead>
+            <tr>
+                <th>Date of Request</th>
+                <th>Department Location</th>
+                <th>Person Making Request</th>
+                <th>Contact</th>
+                <th>Category of Request</th>
+                <th>Description of Request</th>
+                <th>Date of Completion</th>
+                <th>Approval by Property</th>
+                <th>Process</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in requests %}
+                <tr>
+                    <td>{{ task.date_of_request }}</td>
+                    <td>{{ task.department_location }}</td>
+                    <td>{{ task.person_making_request }}</td>
+                    <td>{{ task.contact }}</td>
+                    <td>{{ task.category_of_request }}</td>
+                    <td>{{ task.description_of_request }}</td>
+                    <td>{{ task.date_of_completion }}</td>
+                    <td>{{ task.approval_by_property }}</td>
+                    <td>{{ task.process }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
