@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, Group, Permission
 
 CATEGORY = (
@@ -8,6 +9,13 @@ CATEGORY = (
     ('Air-condition', 'Air-condition'),
     ('Plumbing', 'Plumbing'),
     ('Other', 'Other'),
+)
+
+PROCESS_CHOICES = (
+    ('pending', 'Pending'),
+    ('solved', 'Solved'),
+    ('unsolved', 'Unsolved'),
+    ('insoluble', 'Insoluble'),
 )
 
 class MaintenanceRequest(models.Model):
@@ -20,8 +28,12 @@ class MaintenanceRequest(models.Model):
     check_repaired_by = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='checked_requests')
     date_of_completion = models.DateField(null=True, blank=True)
     approval_by_property = models.BooleanField(default=False)
-    solved = models.BooleanField(default=False)
+    process = models.CharField(max_length=10, choices=PROCESS_CHOICES, default='pending')
 
+    def save(self, *args, **kwargs):
+        if self.process == 'solved' and not self.date_of_completion:
+            self.date_of_completion = timezone.now().date()
+        super().save(*args, **kwargs)
     def __str__(self):
         return f"Maintenance Request #{self.pk}"
     
