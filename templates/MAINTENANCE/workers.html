@@ -1,2 +1,53 @@
 {% extends "partials/base.html" %}
 {% block title %} All Workers {% endblock %}
+
+{% block content %}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+    th {
+        background-color: #17a2b8;
+        color: white;
+    }
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+</style>
+    <h1>All Workers</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Worker</th>
+                <th>Assigned Requests</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for worker_with_requests in workers_with_requests %}
+            <tr>
+                <td>{{ worker_with_requests.worker.get_full_name }}</td>
+                <td>
+                    <ul>
+                    {% for task in worker_with_requests.requests %}
+                        <li>
+                            Category: {{ task.category_of_request }}
+                        </li>
+                    {% empty %}
+                        <li>No requests assigned.</li>
+                    {% endfor %}
+                    </ul>
+                </td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="2">No workers found.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

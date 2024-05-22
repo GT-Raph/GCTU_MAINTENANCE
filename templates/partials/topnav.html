@@ -23,42 +23,42 @@
                         <div class="col-md-2">
                             <a class="text-decoration-none text-dark" href="{% url 'all_maintenance' %}">
                                 <div class="card my-card shadow text-center p-3">
-                                    <h4>Requests </h4>
+                                    <h4>Requests ({{ all_count }})</h4>
                                 </div>
                             </a>
                         </div>
                         <div class="col-md-2">
                             <a class="text-decoration-none text-dark" href="{% url 'pending' %}">
                                 <div class="card my-card shadow text-center p-3">
-                                    <h4>Pending </h4>
+                                    <h4>Pending ({{ pending_count }})</h4>
                                 </div>
                             </a>
                         </div>
                         <div class="col-md-2">
                             <a class="text-decoration-none text-dark" href="{% url 'solved' %}">
                                 <div class="card my-card shadow text-center p-3">
-                                    <h4>All Solved </h4>
+                                    <h4>All Solved ({{ solved_count }})</h4>
                                 </div>
                             </a>
                         </div>
                         <div class="col-md-2">
                             <a class="text-decoration-none text-dark" href="{% url 'unsolved' %}">
                                 <div class="card my-card shadow text-center p-3">
-                                    <h4>Unsolved </h4>
+                                    <h4>Unsolved ({{ unsolved_count }})</h4>
                                 </div>
                             </a>
                         </div>
                         <div class="col-md-2">
                             <a class="text-decoration-none text-dark" href="{% url 'insoluble' %}">
                                 <div class="card my-card shadow text-center p-3">
-                                    <h4>Insoluble </h4>
+                                    <h4>Insoluble ({{ insoluble_count }})</h4>
                                 </div>
                             </a>
                         </div>
                         <div class="col-md-2">
                             <a class="text-decoration-none text-dark" href="{% url 'workers' %}">
                                 <div class="card my-card shadow text-center p-3">
-                                    <h4>Workers </h4>
+                                    <h4>Workers ({{ workers_count }})</h4>
                                 </div>
                             </a>
                         </div>
