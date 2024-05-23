@@ -18,6 +18,11 @@ PROCESS_CHOICES = (
     ('insoluble', 'Insoluble'),
 )
 
+STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('completed', 'Completed'),
+    ]
+
 class MaintenanceRequest(models.Model):
     date_of_request = models.DateField(auto_now_add=True)
     department_location = models.CharField(max_length=100)
@@ -29,11 +34,13 @@ class MaintenanceRequest(models.Model):
     date_of_completion = models.DateField(null=True, blank=True)
     approval_by_property = models.BooleanField(default=False)
     process = models.CharField(max_length=10, choices=PROCESS_CHOICES, default='pending')
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
 
     def save(self, *args, **kwargs):
-        if self.process == 'solved' and not self.date_of_completion:
+        if self.status == 'completed' and not self.date_of_completion:
             self.date_of_completion = timezone.now().date()
         super().save(*args, **kwargs)
+
     def __str__(self):
         return f"Maintenance Request #{self.pk}"
     

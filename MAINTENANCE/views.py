@@ -22,6 +22,8 @@ def user_login(request):
             # Invalid login
             pass
     return render(request, 'MAINTENANCE/login.html')
+
+@login_required
 def index(request):
     return render(request, 'MAINTENANCE/index.html')
 

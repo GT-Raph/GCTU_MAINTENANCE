@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'crispy_forms',
 ]
 
+CRISPY_TEMPLATE_PACK = 'bootstrap4'  # Use 'bootstrap4' for Bootstrap styling
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -51,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    #'MAINTENANCE.middleware.UserActivityMiddleware',
 ]
 
 ROOT_URLCONF = 'GCTU_MAINTENANCE.urls'
@@ -148,8 +151,15 @@ STATIC_ROOT = (BASE_DIR/"asert/")
 
 #LOGIN_REDIRECT_URL = 'dashboard-index'
 
-#LOGIN_URL = 'user-login'
+LOGIN_URL = 'user-login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #AUTH_USER_MODEL = 'MAINTENANCE.CustomUser'
+
+#LOGIN_URL = 'login'
+
+LOGIN_REDIRECT_URL = 'user-index'
+
+# Set session timeout to 15 minutes (15 * 60 seconds)
+SESSION_COOKIE_AGE = 1 * 60
