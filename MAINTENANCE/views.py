@@ -1,15 +1,44 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.http import HttpResponse
-from .forms import MaintenanceRequestForm
-from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from .forms import MaintenanceRequestForm
 from .models import MaintenanceRequest 
+from google.cloud import recaptchaenterprise_v1
+from google.cloud.recaptchaenterprise_v1 import Assessment
 
+def create_assessment(project_id: str, recaptcha_key: str, token: str, recaptcha_action: str) -> Assessment:
+    client = recaptchaenterprise_v1.RecaptchaEnterpriseServiceClient()
+    event = recaptchaenterprise_v1.Event()
+    event.site_key = recaptcha_key
+    event.token = token
 
+    assessment = recaptchaenterprise_v1.Assessment()
+    assessment.event = event
 
-# Create your views here.
+    project_name = f"projects/{project_id}"
+
+    request = recaptchaenterprise_v1.CreateAssessmentRequest()
+    request.assessment = assessment
+    request.parent = project_name
+
+    response = client.create_assessment(request)
+
+    if not response.token_properties.valid:
+        print("The CreateAssessment call failed because the token was invalid for the following reasons: ", response.token_properties.invalid_reason)
+        return
+
+    if response.token_properties.action != recaptcha_action:
+        print("The action attribute in your reCAPTCHA tag does not match the action you are expecting to score")
+        return
+
+    for reason in response.risk_analysis.reasons:
+        print(reason)
+    print("The reCAPTCHA score for this token is: ", response.risk_analysis.score)
+    assessment_name = client.parse_assessment_path(response.name).get("assessment")
+    print(f"Assessment name: {assessment_name}")
+    return response
+
 def user_login(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -17,10 +46,7 @@ def user_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('index')  # or wherever you want to redirect after login
-        else:
-            # Invalid login
-            pass
+            return redirect('index')
     return render(request, 'MAINTENANCE/login.html')
 
 @login_required
@@ -39,10 +65,7 @@ def solved(request):
 
 @login_required
 def unsolved(request):
-    # Get all unsolved maintenance tasks assigned to the current user
     unsolved_maintenance = MaintenanceRequest.objects.filter(process='unsolved', check_repaired_by=request.user)
-
-    # Pass the tasks to the template
     return render(request, 'MAINTENANCE/unsolved.html', {'maintenance': unsolved_maintenance})
 
 @csrf_exempt
@@ -64,25 +87,16 @@ def insoluble(request):
 
 @login_required
 def workers(request):
-    # Exclude the current user from the list of workers
     workers = User.objects.exclude(id=request.user.id)
-    workers_with_requests = [
-        {
-            'worker': worker,
-            'requests': MaintenanceRequest.objects.filter(check_repaired_by=worker)
-        }
-        for worker in workers
-    ]
+    workers_with_requests = [{'worker': worker, 'requests': MaintenanceRequest.objects.filter(check_repaired_by=worker)} for worker in workers]
     return render(request, 'MAINTENANCE/workers.html', {'workers_with_requests': workers_with_requests})
-
-
 
 def request(request):
     if request.method == 'POST':
         form = MaintenanceRequestForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('request_success')  # replace 'success_url' with the URL you want to redirect to after a successful form submission
+            return redirect('request_success')
     else:
         form = MaintenanceRequestForm()
     return render(request, 'MAINTENANCE/request.html', {'form': form})

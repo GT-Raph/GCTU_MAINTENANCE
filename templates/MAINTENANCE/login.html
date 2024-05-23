@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <!-- recaptcha -->
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6LcHVOYpAAAAAGNfisftlOq6C8qCN5MxGCWpGyZn"></script>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
@@ -78,5 +80,13 @@
             </div>
         </div>
     </div>
+    <script>
+        function onClick(e) {
+          e.preventDefault();
+          grecaptcha.enterprise.ready(async () => {
+            const token = await grecaptcha.enterprise.execute('6LcHVOYpAAAAAGNfisftlOq6C8qCN5MxGCWpGyZn', {action: 'LOGIN'});
+          });
+        }
+      </script>
 </body>
 </html>
