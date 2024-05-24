@@ -6,6 +6,7 @@ from .forms import MaintenanceRequestForm
 from .models import MaintenanceRequest 
 from google.cloud import recaptchaenterprise_v1
 from google.cloud.recaptchaenterprise_v1 import Assessment
+from django.contrib.auth.models import User
 
 def create_assessment(project_id: str, recaptcha_key: str, token: str, recaptcha_action: str) -> Assessment:
     client = recaptchaenterprise_v1.RecaptchaEnterpriseServiceClient()

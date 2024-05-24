@@ -9,7 +9,7 @@ admin.site.site_header = 'GCTU PHYSICAL DEVELOPMENT'
 
 
 class MaintenanceRequestAdmin(admin.ModelAdmin):
-    list_display = ('department_location', 'person_making_request', 'contact', 'category_of_request', 'display_checked_by', 'is_completed')
+    list_display = ('department_location', 'person_making_request', 'category_of_request', 'display_checked_by', 'process', 'is_completed')
     
     def display_checked_by(self, obj):
         checked_by_users = [str(user) for user in obj.check_repaired_by.all()]
@@ -24,6 +24,10 @@ class MaintenanceRequestAdmin(admin.ModelAdmin):
     is_completed.short_description = 'Completed'
     is_completed.boolean = True
     
+    def get_readonly_fields(self, request, obj=None):
+        if obj:  # editing an existing object
+            return self.readonly_fields
+        return ()
     
     fieldsets = (
         (None, {
