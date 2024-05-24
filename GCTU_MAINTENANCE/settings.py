@@ -162,4 +162,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = 'user-index'
 
 # Set session timeout to 15 minutes (15 * 60 seconds)
-SESSION_COOKIE_AGE = 1 * 60
+SESSION_COOKIE_AGE = 15 * 60
